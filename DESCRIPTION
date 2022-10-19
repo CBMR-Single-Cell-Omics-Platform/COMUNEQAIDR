@@ -1,0 +1,26 @@
+Package: COMUNEQAIDR
+Type: Package
+Title: COmbine MUltiple single Nuclei sEQuencing runs AID R-package
+Version: 1.0.0
+Author: 
+    Lars Roed Ingerslev <ingerslev@sund.ku.dk> [aut, cre]
+    Oliver Knights Moeller <oliver.moller@sund.ku.dk> [aut]
+Maintainer: Lars Roed Ingerslev <ingerslev@sund.ku.dk>
+Description: R-part of the COMUNEQAID pipeline
+    Package containing the R functions for the analysis of single nuclei/cell
+    RNA-seq analysis using the COMUNEQAID pipeline developed by Oliver Knights 
+    Moeller.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    here,
+    readxl,
+    stats,
+    stringr,
+    utils,
+    xml2,
+    yaml
+RoxygenNote: 7.2.1
+Depends: 
+    R (>= 2.10)
