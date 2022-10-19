@@ -4,7 +4,7 @@ Title: COmbine MUltiple single Nuclei sEQuencing runs AID R-package
 Version: 1.0.0
 Author: 
     Lars Roed Ingerslev <ingerslev@sund.ku.dk> [aut, cre]
-    Oliver Knights Moeller <oliver.moller@sund.ku.dk> [aut]
+    Oliver Knights Møller <oliver.moller@sund.ku.dk> [aut]
 Maintainer: Lars Roed Ingerslev <ingerslev@sund.ku.dk>
 Description: R-part of the COMUNEQAID pipeline
     Package containing the R functions for the analysis of single nuclei/cell
