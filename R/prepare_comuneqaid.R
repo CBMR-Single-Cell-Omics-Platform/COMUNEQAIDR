@@ -390,6 +390,9 @@ prepare_comuneqaid <- function(comuneqaid_id,
 
   config <- infer_and_check_config(config, sheet, chemistry)
 
+  # SCOP ID is not used but kept only for reference
+  config[["scop_id"]] <- unique(sheet[["scop_id"]])
+
   # PIN dictionary, directly from sheet
   config[["pin_10x"]] <- tapply(
     sheet[["i7_index"]],
@@ -415,7 +418,7 @@ prepare_comuneqaid <- function(comuneqaid_id,
   # Write sample sheets:
   for (i in bcl_folders) {
     flowcell_id <- extract_flowcell_id(i)
-    if(config[["workflow"]] == "Y") {
+    if (config[["workflow"]] == "Y") {
       hto <- config[["pin_hto"]][[i]]
     } else {
       hto <- NULL
