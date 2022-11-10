@@ -1,4 +1,3 @@
-## code to prepare `DATASET` dataset goes here
 known_species <- c("Human", "Mouse", "Rat", "Rhesus", "Mouse - optimized")
 
 translate_index_10x_dual <- utils::read.csv(
