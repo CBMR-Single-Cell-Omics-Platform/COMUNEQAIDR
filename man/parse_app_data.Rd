@@ -4,7 +4,7 @@
 \alias{parse_app_data}
 \title{Parse files from COMUNEQAID app}
 \usage{
-parse_app_data(samp, nume, sele)
+parse_app_data(samp, nume, sele, text)
 }
 \arguments{
 \item{samp}{string, path to samp.csv file}
