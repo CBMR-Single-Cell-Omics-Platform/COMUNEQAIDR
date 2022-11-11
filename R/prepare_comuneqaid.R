@@ -415,7 +415,7 @@ prepare_comuneqaid <- function(comuneqaid_id,
   # Write sample sheets:
   for (i in bcl_folders) {
     flowcell_id <- extract_flowcell_id(i)
-    if(config[["workflow"]] == "Y") {
+    if (config[["workflow"]] == "Y") {
       hto <- config[["pin_hto"]][[i]]
     } else {
       hto <- NULL
