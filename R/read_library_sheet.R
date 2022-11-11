@@ -23,15 +23,17 @@ read_input_files <- function(files, lib_sheet_path) {
     sheet <- read_multiple_sheets(library_sheets = files,
                                   reader = reader,
                                   lib_sheet_path = lib_sheet_path)
+    sheet[["scop_id"]] <- "Cannot be read from library sheet v1"
   } else if (extension == "csv") {
-    if (all(c("samp", "nume", "sele") %in% names(files))) {
+    if (all(c("samp", "nume", "sele", "text") %in% names(files))) {
       sheet <- parse_app_data(
         samp = files[["samp"]],
         nume = files[["nume"]],
-        sele = files[["sele"]]
+        sele = files[["sele"]],
+        text = files[["text"]]
       )
     } else {
-      stop("App data files must be named 'samp', 'nume' and 'sele'")
+      stop("App data files must be named 'samp', 'nume', 'sele' and 'text'")
     }
   } else {
     stop("Only csv and xlsx files supported")
@@ -342,7 +344,7 @@ read_multiple_sheets <- function(library_sheets,
 #'
 #' @return data.frame with info necessary for running COMUNEQAID
 #' @export
-parse_app_data <- function(samp, nume, sele) {
+parse_app_data <- function(samp, nume, sele, text) {
   sheet <- utils::read.csv(samp)
   colnames(sheet) <- c(
     "sample", "tissue", "i7_index", "hash_index", "10x_pin",
@@ -350,6 +352,7 @@ parse_app_data <- function(samp, nume, sele) {
   )
   n_samples <- utils::read.csv(nume)
   vars <- utils::read.csv(sele)
+  text_vars <- utils::read.csv(text)
 
   sheet[["n_samples"]] <- n_samples[["value"]]
   sheet[["species"]] <- vars[vars[["inputId"]] == "select_organism", "value"]
@@ -359,6 +362,7 @@ parse_app_data <- function(samp, nume, sele) {
   sheet[["nucleus_isolation_id"]] <- paste(sample(letters, 30, TRUE),
     collapse = ""
   )
+  sheet[["scop_id"]] <- text[text[["inputId"]] == "text_scopID", "value"]
   sheet[["kit"]] <- "unknown"
   sheet
 }

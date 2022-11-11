@@ -8,6 +8,7 @@ prepare_comuneqaid(
   comuneqaid_id,
   input_files,
   config = list(),
+  location = "computerome",
   lib_sheet_path = default_lib_sheet_path,
   qc_path = default_qc_path,
   bcl_path = default_bcl_path,
@@ -26,6 +27,9 @@ see details.}
 \item{config}{list of user defined config settings, can be empty list.
 If set, overrides all other settings including paths and comuneqaid id
 given to this function.}
+
+\item{location}{string, name of computing location. Used for generating paths
+to resources.}
 
 \item{lib_sheet_path}{optional string, path to library sheets folder}
 

@@ -301,6 +301,8 @@ hto_features <- function(sheet) {
 #' @param config list of user defined config settings, can be empty list.
 #' If set, overrides all other settings including paths and comuneqaid id
 #' given to this function.
+#' @param location string, name of computing location. Used for generating paths
+#' to resources.
 #' @param lib_sheet_path optional string, path to library sheets folder
 #' @param qc_path optional string, path to qc output folder
 #' @param bcl_path optional string, path to bcl input folder
@@ -318,6 +320,7 @@ hto_features <- function(sheet) {
 prepare_comuneqaid <- function(comuneqaid_id,
                                input_files,
                                config = list(),
+                               location = "computerome",
                                lib_sheet_path = default_lib_sheet_path,
                                qc_path = default_qc_path,
                                bcl_path = default_bcl_path,
@@ -339,7 +342,7 @@ prepare_comuneqaid <- function(comuneqaid_id,
   # Add missing variables to config
   # Names are the names of the variables, and values are the names in the config
   config_vars <- c(
-    "comuneqaid_id"  = "comID",
+    "comuneqaid_id"  = "com_id",
     "lib_sheet_path" = "lib_sheet_path",
     "qc_path"        = "qc_path",
     "bcl_path"       = "bcl_path",
@@ -389,6 +392,15 @@ prepare_comuneqaid <- function(comuneqaid_id,
   )
 
   config <- infer_and_check_config(config, sheet, chemistry)
+
+  # SCOP ID is not used but kept only for reference
+  config[["scop_id"]] <- unique(sheet[["scop_id"]])
+
+  # Paths to resources are by necessity dependent on the location
+  config <- c(
+    config,
+    get_resources(location, unique(sheet[["species"]]))
+  )
 
   # PIN dictionary, directly from sheet
   config[["pin_10x"]] <- tapply(
