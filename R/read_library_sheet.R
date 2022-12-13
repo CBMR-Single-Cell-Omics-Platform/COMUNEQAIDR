@@ -130,7 +130,6 @@ parse_library_sheet_v1 <- function(file) {
   colnames(sheet) <- c(names(relevant_cols), "bcl_folder", "n_samples")
 
   nucleus_isolation_id <- paste(
-    sheet[["sample"]],
     sheet[["date_10x"]],
     sheet[["i7_index"]],
     sep = "_"
@@ -146,6 +145,8 @@ parse_library_sheet_v1 <- function(file) {
   sheet[["10x_bcl"]] <- sheet[["bcl_folder"]]
   sheet[["bcl_folder"]] <- NULL
   sheet[["date_10x"]] <- NULL
+
+  sheet[["i7_index"]] <- paste0("SI-TT-", sheet[["i7_index"]])
 
   sheet[["lane"]] <- "*"
   sheet[["comment"]] <- paste(sheet[["various_info"]], sheet[["note"]])

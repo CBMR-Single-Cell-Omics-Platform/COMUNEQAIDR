@@ -63,6 +63,7 @@ make_pool_table <- function(sheet, split_by = c("i7_index", "lane")) {
     hto_bcl <- unique(x[["hto_bcl"]])
     hto_bcl <- ifelse(is.na(hto_bcl), NA, paste(hto_bcl, sep = ";"))
     out <- list(
+      nucleus_isolation_id = unique(x[["nucleus_isolation_id"]]),
       i7_index = unique(x[["i7_index"]]),
       hash_index = unique(x[["hash_index"]]),
       lane = unique(x[["lane"]]),
@@ -74,7 +75,7 @@ make_pool_table <- function(sheet, split_by = c("i7_index", "lane")) {
     as.data.frame(out)
   }
 
-  sheet_parts <- split(sheet, idx_split)
+  sheet_parts <- split(sheet, idx_split, drop = TRUE)
 
   pool_table <- lapply(sheet_parts, make_row)
   pool_table <- do.call("rbind", pool_table)
@@ -87,6 +88,7 @@ make_pool_table <- function(sheet, split_by = c("i7_index", "lane")) {
   }
 
   colnames(pool_table) <- c(
+    "nucleus_isolation_id" = "Nucleus Isolation ID",
     "i7_index" = "Index (10x)",
     "hash_index" = "Index (HTO)",
     "lane" = "Lane",
@@ -172,59 +174,31 @@ from_pin_to_bcl <- function(sheet, bcl_path) {
 #'
 #' @param i7 vector of strings containing 10x index set names
 #' @param hto vector of strings containing HTO index names
-#' @param version string, chemistry version
 #' @param flowcell_id string, containing 10 digit flowcell id
 #'
 #' @return string containing sample sheet
 #' @export
-make_sample_sheet <- function(i7, hto = NULL, version, flowcell_id) {
-  header <- switch(version,
-    "RNA v3.1" = samplesheet_dualindex_header,
-    "RNA v3.0" = samplesheet_singleindex_header
-  )
-  prefix <- switch(version,
-    "RNA v3.1" = "SI-TT-",
-    "RNA v3.0" = "SI-GA-"
+make_sample_sheet <- function(i7, hto = NULL, flowcell_id) {
+  header <- samplesheet_dualindex_header
+
+  index1 <- translate_index_10x_dual[i7, 1L]
+  # Index 2 is the old reverse complemented sequence
+  index2 <- translate_index_10x_dual[i7, 3L]
+
+  i7_string <- paste("", i7, i7, index1, index2, flowcell_id, "",
+                     sep = ",", collapse = "\n"
   )
 
-  if (version == "RNA v3.0") {
-    indexes <- unlist(translate_index_10x_single[i7, ])
-    ids <- paste0(prefix, rep(i7, 4L), "_", rep(1L:4L, each = length(i7)))
+  if (!is.null(hto)) {
+    index1 <- translate_index_hto[hto, 1L]
+    index2 <- translate_index_hto[hto, 2L]
+    ids <- hto
 
-    i7_string <- paste("", ids, ids, indexes, flowcell_id,
-      sep = ",", collapse = "\n"
+    hto_string <- paste("", ids, ids, index1, index2, flowcell_id, "",
+                        sep = ",", collapse = "\n"
     )
-
-    if (!is.null(hto)) {
-      indexes <- unlist(translate_index_hto[hto, 1L])
-      ids <- hto
-      hto_string <- paste("", ids, ids, indexes, flowcell_id,
-        sep = ",", collapse = "\n"
-      )
-    } else {
-      hto_string <- NULL
-    }
   } else {
-    index1 <- translate_index_10x_dual[i7, 1L]
-    # Index 2 is the old reverse complemented sequence
-    index2 <- translate_index_10x_dual[i7, 3L]
-    ids <- paste0(prefix, i7)
-
-    i7_string <- paste("", ids, ids, index1, index2, flowcell_id, "",
-      sep = ",", collapse = "\n"
-    )
-
-    if (!is.null(hto)) {
-      index1 <- translate_index_hto[hto, 1L]
-      index2 <- translate_index_hto[hto, 2L]
-      ids <- hto
-
-      hto_string <- paste("", ids, ids, index1, index2, flowcell_id, "",
-        sep = ",", collapse = "\n"
-      )
-    } else {
-      hto_string <- NULL
-    }
+    hto_string <- NULL
   }
 
   out <- paste(header, i7_string, hto_string, sep = "\n")
@@ -418,7 +392,8 @@ prepare_comuneqaid <- function(comuneqaid_id,
   }
 
   # Create pool table
-  pool_table <- make_pool_table(sheet, split_by = c("i7_index", "lane"))
+  pool_table <- make_pool_table(sheet, split_by = c("nucleus_isolation_id",
+                                                    "i7_index", "lane"))
   utils::write.csv(pool_table,
     file = here::here(log_path, comuneqaid_id, "poolTable.csv"),
     row.names = FALSE
@@ -435,7 +410,6 @@ prepare_comuneqaid <- function(comuneqaid_id,
     sample_sheet <- make_sample_sheet(
       i7 = config[["pin_10x"]][[i]],
       hto = hto,
-      version = config[["chemistry"]],
       flowcell_id = flowcell_id
     )
     sheet_name <- paste0("SampleSheet_", i, ".csv")

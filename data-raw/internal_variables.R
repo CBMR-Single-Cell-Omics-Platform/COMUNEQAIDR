@@ -52,31 +52,6 @@ default_config_path <- "scRNAseq/"
 
 samplesheet_dualindex_header <-
   "[Header]
-FileFormatVersion,4
-
-[Reads]
-28
-90
-
-[Data]
-Lane,Sample_ID,Sample_Name,index,index2,Sample_Project,Original_Sample_ID
-"
-
-samplesheet_singleindex_header <-
-  "[Header]
-EMFileVersion,4
-
-[Reads]
-28
-94
-
-[Data]
-Lane,Sample_ID,Sample_Name,index,Sample_Project
-"
-
-
-samplesheet_dualindex_header <-
-  "[Header]
 EMFileVersion,4
 
 [Reads]
@@ -85,18 +60,6 @@ EMFileVersion,4
 
 [Data]
 Lane,Sample_ID,Sample_Name,index,index2,Sample_Project,Original_Sample_ID
-"
-
-samplesheet_singleindex_header <-
-  "[Header]
-EMFileVersion,4
-
-[Reads]
-28
-94
-
-[Data]
-Lane,Sample_ID,Sample_Name,index,Sample_Project
 "
 
 usethis::use_data(known_species,
@@ -104,7 +67,6 @@ usethis::use_data(known_species,
   index_hto,
   hto_ids,
   translate_index_10x_dual,
-  translate_index_10x_single,
   translate_index_hto,
   translate_bc_hto,
   default_qc_path,
@@ -115,7 +77,6 @@ usethis::use_data(known_species,
   default_lib_sheet_path,
   default_config_path,
   samplesheet_dualindex_header,
-  samplesheet_singleindex_header,
   internal = TRUE,
   overwrite = TRUE
 )

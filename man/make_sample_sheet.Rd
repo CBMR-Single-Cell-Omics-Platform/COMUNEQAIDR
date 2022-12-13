@@ -4,14 +4,12 @@
 \alias{make_sample_sheet}
 \title{Create sample sheet}
 \usage{
-make_sample_sheet(i7, hto = NULL, version, flowcell_id)
+make_sample_sheet(i7, hto = NULL, flowcell_id)
 }
 \arguments{
 \item{i7}{vector of strings containing 10x index set names}
 
 \item{hto}{vector of strings containing HTO index names}
-
-\item{version}{string, chemistry version}
 
 \item{flowcell_id}{string, containing 10 digit flowcell id}
 }
