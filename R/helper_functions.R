@@ -192,7 +192,7 @@ extract_sequencing_date <- function(x) {
 #' extract_flowcell_id("900101_A00001_0001_ABCDEFGHI1")
 extract_flowcell_id <- function(x) {
   gsub(
-    pattern = "^[[:digit:]]{6}_[[:alpha:]]+[[:digit:]]+_[[:digit:]]{4}_([[:alnum:]]{10})$", # nolint: line_length_linter
+    pattern = "^[[:digit:]]{6}_[[:alpha:]]+[[:digit:]]+_[[:digit:]]{4}_[A|B]([[:alnum:]]{9})$", # nolint: line_length_linter
     replacement = "\\1",
     x = x
   )
