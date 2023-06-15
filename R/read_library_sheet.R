@@ -20,9 +20,11 @@ read_input_files <- function(files, lib_sheet_path) {
       stop(version, " not implemented")
     )
 
-    sheet <- read_multiple_sheets(library_sheets = files,
-                                  reader = reader,
-                                  lib_sheet_path = lib_sheet_path)
+    sheet <- read_multiple_sheets(
+      library_sheets = files,
+      reader = reader,
+      lib_sheet_path = lib_sheet_path
+    )
     sheet[["scop_id"]] <- "Cannot be read from library sheet v1"
   } else if (extension == "csv") {
     if (all(c("samp", "nume", "sele", "text") %in% names(files))) {

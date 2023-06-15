@@ -4,7 +4,7 @@ resource_base <- list(
   nidhogg = "/projects/SCOP/resources"
 )
 
-whitelist = "/non-species-specific/whitelist/3M-february-2018.txt"
+whitelist <- "/non-species-specific/whitelist/3M-february-2018.txt"
 
 species_specific <- list(
   "Mouse" = list(
@@ -48,9 +48,11 @@ species_specific <- list(
 #' @export
 get_resources <- function(location, species) {
   full_path <- function(x) {
-    file.path(resource_base[[location]],
-              species_specific[[species]][["path_ref"]],
-              species_specific[[species]][[x]])
+    file.path(
+      resource_base[[location]],
+      species_specific[[species]][["path_ref"]],
+      species_specific[[species]][[x]]
+    )
   }
   list(
     salmon_index = full_path("salmon_index"),
