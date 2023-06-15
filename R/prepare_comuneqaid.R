@@ -373,7 +373,7 @@ prepare_comuneqaid <- function(comuneqaid_id,
   # Paths to resources are by necessity dependent on the location
   config <- c(
     config,
-    get_resources(location, unique(sheet[["species"]]))
+    get_resources(location, stringr::str_to_title(unique(sheet[["species"]])))
   )
 
   # PIN dictionary, directly from sheet
