@@ -4,11 +4,7 @@ translate_index_10x_dual <- utils::read.csv(
   file = here::here("data-raw/Dual_Index_Kit_TT_Set_A.csv"),
   skip = 3
 )
-# rownames(translate_index_10x_dual) <- gsub(
-#   pattern = "SI-TT-",
-#   replacement = "",
-#   x = translate_index_10x_dual[["index_name"]]
-# )
+
 rownames(translate_index_10x_dual) <- translate_index_10x_dual[["index_name"]]
 translate_index_10x_dual[["index_name"]] <- NULL
 
@@ -16,11 +12,7 @@ translate_index_10x_single <- utils::read.csv(
   file = here::here("data-raw/Single_Index_Kit_T_Set_A.csv"),
   header = FALSE
 )
-# rownames(translate_index_10x_single) <- gsub(
-#   pattern = "SI-GA-",
-#   replacement = "",
-#   x = translate_index_10x_single[[1]]
-# )
+
 rownames(translate_index_10x_single) <- translate_index_10x_single[[1]]
 translate_index_10x_single[[1]] <- NULL
 

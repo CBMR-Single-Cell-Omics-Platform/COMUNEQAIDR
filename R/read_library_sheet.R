@@ -365,7 +365,9 @@ parse_app_data <- function(samp, nume, sele, text) {
   sheet[["nucleus_isolation_id"]] <- paste(sample(letters, 30, TRUE),
     collapse = ""
   )
-  sheet[["scop_id"]] <- text_vars[text_vars[["inputId"]] == "text_scopID", "value"]
+  sheet[["scop_id"]] <- text_vars[
+    text_vars[["inputId"]] == "text_scopID", "value"
+  ]
   sheet[["kit"]] <- "unknown"
   sheet
 }
