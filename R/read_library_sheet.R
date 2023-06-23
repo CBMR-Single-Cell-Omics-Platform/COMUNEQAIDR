@@ -20,9 +20,11 @@ read_input_files <- function(files, lib_sheet_path) {
       stop(version, " not implemented")
     )
 
-    sheet <- read_multiple_sheets(library_sheets = files,
-                                  reader = reader,
-                                  lib_sheet_path = lib_sheet_path)
+    sheet <- read_multiple_sheets(
+      library_sheets = files,
+      reader = reader,
+      lib_sheet_path = lib_sheet_path
+    )
     sheet[["scop_id"]] <- "Cannot be read from library sheet v1"
   } else if (extension == "csv") {
     if (all(c("samp", "nume", "sele", "text") %in% names(files))) {
@@ -179,6 +181,7 @@ process_seq_info <- function(seq_info, sample_col, output_col) {
   splitter <- function(x) {
     out <- strsplit(x = as.character(x), split = ",", fixed = TRUE)[[1]]
     out <- gsub(x = out, pattern = "\"", replacement = "")
+    out <- trimws(out, which = "both")
     out
   }
 
@@ -342,6 +345,7 @@ read_multiple_sheets <- function(library_sheets,
 #' @param samp string, path to samp.csv file
 #' @param nume string, path to nume.csv file
 #' @param sele string, path to sele.csv file
+#' @param text string, path to text.txt file
 #'
 #' @return data.frame with info necessary for running COMUNEQAID
 #' @export
@@ -363,7 +367,9 @@ parse_app_data <- function(samp, nume, sele, text) {
   sheet[["nucleus_isolation_id"]] <- paste(sample(letters, 30, TRUE),
     collapse = ""
   )
-  sheet[["scop_id"]] <- text[text[["inputId"]] == "text_scopID", "value"]
+  sheet[["scop_id"]] <- text_vars[
+    text_vars[["inputId"]] == "text_scopID", "value"
+  ]
   sheet[["kit"]] <- "unknown"
   sheet
 }
