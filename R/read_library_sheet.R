@@ -181,6 +181,7 @@ process_seq_info <- function(seq_info, sample_col, output_col) {
   splitter <- function(x) {
     out <- strsplit(x = as.character(x), split = ",", fixed = TRUE)[[1]]
     out <- gsub(x = out, pattern = "\"", replacement = "")
+    out <- trimws(out, which = "both")
     out
   }
 
@@ -344,6 +345,7 @@ read_multiple_sheets <- function(library_sheets,
 #' @param samp string, path to samp.csv file
 #' @param nume string, path to nume.csv file
 #' @param sele string, path to sele.csv file
+#' @param text string, path to text.txt file
 #'
 #' @return data.frame with info necessary for running COMUNEQAID
 #' @export

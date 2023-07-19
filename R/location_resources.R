@@ -43,6 +43,7 @@ species_specific <- list(
 #' Get location specific resources
 #'
 #' @param location string, name of computing location.
+#' @param species string, name of species investigated.
 #'
 #' @return list of resource locations
 #' @export

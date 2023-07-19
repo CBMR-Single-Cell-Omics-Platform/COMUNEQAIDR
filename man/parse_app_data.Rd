@@ -12,6 +12,8 @@ parse_app_data(samp, nume, sele, text)
 \item{nume}{string, path to nume.csv file}
 
 \item{sele}{string, path to sele.csv file}
+
+\item{text}{string, path to text.txt file}
 }
 \value{
 data.frame with info necessary for running COMUNEQAID
