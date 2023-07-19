@@ -4,7 +4,7 @@
 \alias{infer_and_check_config}
 \title{Infer config parameters and sanity check them}
 \usage{
-infer_and_check_config(config, sheet, chemistry)
+infer_and_check_config(config, sheet)
 }
 \arguments{
 \item{config}{list of config settings}
