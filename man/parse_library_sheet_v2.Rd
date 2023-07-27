@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_library_sheet.R
 \name{parse_library_sheet_v2}
 \alias{parse_library_sheet_v2}
-\title{Parse a library sheet v1 file}
+\title{Parse a library sheet v2 file}
 \usage{
 parse_library_sheet_v2(file)
 }
@@ -10,8 +10,8 @@ parse_library_sheet_v2(file)
 \item{file}{string, path to excel file with sequencing information}
 }
 \value{
-data.frame with info necessary for running COMUNEQAID
+list of data.frames with info tables
 }
 \description{
-Parse a library sheet v1 file
+Parse a library sheet v2 file
 }
