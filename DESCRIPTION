@@ -9,17 +9,18 @@ Maintainer: Lars Roed Ingerslev <ingerslev@sund.ku.dk>
 Description: R-part of the COMUNEQAID pipeline
     Package containing the R functions for the analysis of single nuclei/cell
     RNA-seq analysis using the COMUNEQAID pipeline developed by Oliver Knights 
-    Moeller.
+    Møller.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    here,
     readxl,
+    rhandsontable,
+    shiny,
+    shinyjs,
     stats,
-    stringr,
     utils,
-    xml2,
+    writexl,
     yaml
 RoxygenNote: 7.2.3
 Depends: 

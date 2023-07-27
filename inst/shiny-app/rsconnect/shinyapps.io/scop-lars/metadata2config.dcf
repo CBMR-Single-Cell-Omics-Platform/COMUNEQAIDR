@@ -1,12 +1,13 @@
 name: metadata2config
 title: metadata2config
-username: scop-lars
+username:
 account: scop-lars
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9516509
-bundleId:
+bundleId: 7502287
 url: https://scop-lars.shinyapps.io/metadata2config/
-version: 1
+when: 1690457838.68658
+lastSyncTime: 1690457838.68661
 asMultiple: FALSE
 asStatic: FALSE

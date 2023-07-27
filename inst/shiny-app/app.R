@@ -158,12 +158,12 @@ server <- function(input, output) {
 
   output$download_excel <- downloadHandler(
     filename = function() paste(input[["scop_id"]], "Library_sheet.xlsx", sep = "_"),
-    content = function(file) write_xlsx(x = reactiveValuesToList(config_list)[sheets], path = file)
+    content = function(file) writexl::write_xlsx(x = reactiveValuesToList(config_list)[sheets], path = file)
   )
 
   output$download_config <- downloadHandler(
     filename = function() paste0(config_list[["com_id"]], ".yaml"),
-    content = function(file) write_yaml(x = out_config(), file = file)
+    content = function(file) yaml::write_yaml(x = out_config(), file = file)
   )
 
 }

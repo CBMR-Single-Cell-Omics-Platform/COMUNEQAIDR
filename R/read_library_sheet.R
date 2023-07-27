@@ -9,7 +9,7 @@ detect_samplesheet_version <- function(sheet_names) {
   v2_names <- c("sample_sheet", "sample2reaction", "reaction_sheet",
                 "reaction2library", "library_sheet", "library2sequencing",
                 "sequencing_sheet")
-  
+
   if (all(v1_names %in% sheet_names)) {
     version <- "v1"
   } else if (all(v2_names %in% sheet_names)) {
@@ -32,28 +32,28 @@ detect_samplesheet_version <- function(sheet_names) {
 process_seq_info <- function(seq_info, sample_col, date_col, output_col) {
   spacer_rows <- is.na(seq_info[[sample_col]])
   bcl_folder <- seq_info[!spacer_rows, c(sample_col, date_col, output_col)]
-  
+
   splitter <- function(x) {
     out <- strsplit(x = as.character(x), split = ",", fixed = TRUE)[[1]]
     out <- gsub(x = out, pattern = "\"", replacement = "")
     out <- trimws(out, which = "both")
     out
   }
-  
+
   splitter <- function(x) {
     x <- unname(x)
     sample <- strsplit(x = as.character(x[1]), split = ",", fixed = TRUE)[[1]]
     sample <- gsub(x = sample, pattern = "\"", replacement = "")
     sample <- trimws(sample, which = "both")
-    
+
     out <- data.frame(sample_id = sample, date = x[2], bcl_folder = x[3])
   }
-  
+
   bcl_data <- apply(bcl_folder, 1, splitter)
   bcl_data <- do.call("rbind", bcl_data)
-  
+
   bcl_data <- split(bcl_data, bcl_data[["date"]])
-  
+
   for (i in names(bcl_data)) {
     bcl_data[[i]][["sequencing_id"]] <- paste0(
       bcl_data[[i]][["date"]], "_",
@@ -62,7 +62,7 @@ process_seq_info <- function(seq_info, sample_col, date_col, output_col) {
   }
   bcl_data <- do.call("rbind", bcl_data)
   bcl_data <- bcl_data[, c("sample_id", "sequencing_id", "bcl_folder")]
-  
+
   bcl_data
 }
 
@@ -74,11 +74,11 @@ process_seq_info <- function(seq_info, sample_col, date_col, output_col) {
 #' @return list of data.frames with info tables
 #' @export
 parse_library_sheet_v1 <- function(file) {
-  sheet <- read_excel(file, "10X library prep")
+  sheet <- readxl::read_excel(file, "10X library prep")
   # Remove non-breaking space
   colnames(sheet) <- gsub("(*UCP)\\s", " ", colnames(sheet), perl = TRUE)
   sample_col <- "Sample #"
-  
+
   relevant_cols <- c(
     sample_id = "Sample #",
     date_10x = "Date for 10X",
@@ -94,51 +94,51 @@ parse_library_sheet_v1 <- function(file) {
     various_info = "Various information",
     note = "note:"
   )
-  
+
   uses_hashtags <- sheet[[relevant_cols[["workflow"]]]] |>
     na.omit() |>
     tolower()
   uses_hashtags <- all(uses_hashtags == "y")
-  
+
   if (!uses_hashtags) {
     # Guess it is without HTO
     relevant_cols[["loaded_cells"]] <- "Standard 10X (Cells loaded in total)"
   }
-  
+
   spacer_rows <- is.na(sheet[[sample_col]])
   sheet <- sheet[!spacer_rows, relevant_cols]
   sheet[[sample_col]] <- as.character(sheet[[sample_col]])
-  
+
   colnames(sheet) <- names(relevant_cols)
-  
+
   ##### Process BCL folder
   bcl_output_col <- "output name"
   bcl_sample_col <- "sample name(s) format: \"s1\",\"s2\",\"s..."
   bcl_date_col <- "seq date (YYYYMMDD)"
-  seq_info <- read_excel(file, "Sequencing info")
+  seq_info <- readxl::read_excel(file, "Sequencing info")
   colnames(seq_info) <- gsub("(*UCP)\\s", " ", colnames(seq_info), perl = TRUE)
-  
+
   bcl_data <- process_seq_info(
     seq_info = seq_info,
     sample_col = bcl_sample_col,
     date_col = bcl_date_col,
     output_col = bcl_output_col
   )
-  
+
   no_bcl_folder <- setdiff(sheet[["sample_id"]], bcl_data[["sample_id"]])
-  
+
   if (length(no_bcl_folder) > 0) {
     stop(
       "Samples ", paste(no_bcl_folder, collapse = ", "),
       " have no associated bcl folders"
     )
   }
-  
+
   sheet <- merge(sheet, bcl_data, by = "sample_id")
   sheet[["reaction_id"]] <- paste0(
     sheet[["date_10x"]], "_", sheet[["i7_index"]]
     )
-  
+
   ##### Sample Sheet
   sample_sheet <- unique(sheet[, c("sample_id", "species", "hto")])
   rownames(sample_sheet) <- NULL
@@ -146,26 +146,26 @@ parse_library_sheet_v1 <- function(file) {
     pattern = "(*UCP)[\\s\\p{L}]+|\\W+$", # See https://stackoverflow.com/questions/43734293/remove-non-breaking-space-character-in-string
     replacement = "",
     x = sample_sheet[["sample_id"]])
-  
+
   ##### Sample to Reaction
   sample2reaction <- unique(
     sheet[, c("sample_id", "reaction_id", "loaded_cells")]
     )
-  
+
   ##### Reaction Sheet
   reaction_sheet <- unique(
     sheet[, c("reaction_id", "seq_type")]
   )
   reaction_sheet[["cutoff"]] <- "auto"
-  
+
   # Only allow one alignment target per reaction
   species_per_reaction <- Reduce(
     merge, list(sample_sheet, sample2reaction, reaction_sheet)
     )
   align_to <- tapply(
-    X = species_per_reaction[["species"]], 
-    INDEX = species_per_reaction[["reaction_id"]], 
-    FUN = \(x) guess_species(x) |> unique(), 
+    X = species_per_reaction[["species"]],
+    INDEX = species_per_reaction[["reaction_id"]],
+    FUN = \(x) guess_species(x) |> unique(),
     simplify = FALSE
   )
   align_targets <- lapply(align_to, length) |> unlist()
@@ -178,7 +178,7 @@ parse_library_sheet_v1 <- function(file) {
   align_to[align_targets > 1] <- "unknown"
   align_to <- unlist(align_to)
   reaction_sheet[["align"]] <- align_to[reaction_sheet[, "reaction_id"]]
-  
+
 
   ##### Reaction to Library
   reaction2library <- unique(sheet[, c("reaction_id"), drop = FALSE])
@@ -194,7 +194,7 @@ parse_library_sheet_v1 <- function(file) {
     tmp[["library_type"]] <- "hto"
     reaction2library <- rbind(reaction2library, tmp)
   }
-  
+
   ##### Library Sheet
   library_sheet <- unique(sheet[, c("reaction_id", "i7_index")])
   library_sheet[["library_id"]] <- paste0(
@@ -213,7 +213,7 @@ parse_library_sheet_v1 <- function(file) {
     library_sheet <- rbind(library_sheet, tmp)
   }
   library_sheet <- library_sheet[, c("library_id", "index")]
-  
+
   ##### Library to Sequencing
   library2sequencing <- sheet[, c("reaction_id", "sequencing_id")]
   library2sequencing <- merge(reaction2library, library2sequencing)
@@ -222,7 +222,7 @@ parse_library_sheet_v1 <- function(file) {
   library2sequencing <- unique(library2sequencing)
   rownames(library2sequencing) <- NULL
   library2sequencing[["lane"]] <- "*"
-  
+
   ##### Sequencing Sheet
   sequencing_sheet <- unique(bcl_data[, c("sequencing_id", "bcl_folder")])
   rownames(sequencing_sheet) <- NULL
@@ -246,10 +246,10 @@ parse_library_sheet_v1 <- function(file) {
 #' @return list of data.frames with info tables
 #' @export
 parse_library_sheet_v2 <- function(file) {
-  sheet_names <- excel_sheets(file)
+  sheet_names <- readxl::excel_sheets(file)
   names(sheet_names) <- sheet_names
-  
-  out <- lapply(sheet_names, read_excel, path = file)
+
+  out <- lapply(sheet_names, readxl::read_excel, path = file)
   lapply(out, \(x) {x[is.na(x)] <- ""; x})
 }
 
@@ -260,8 +260,8 @@ parse_library_sheet_v2 <- function(file) {
 #' @return list of data.frames with info tables
 #' @export
 parse_config <- function(file) {
-  config <- read_yaml(file)
-  sheets <- c("sample_sheet", "sample2reaction", "reaction_sheet", 
+  config <- yaml::read_yaml(file)
+  sheets <- c("sample_sheet", "sample2reaction", "reaction_sheet",
               "reaction2library", "library_sheet", "library2sequencing",
               "sequencing_sheet")
   for (i in sheets) {
