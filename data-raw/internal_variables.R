@@ -55,6 +55,5 @@ usethis::use_data(
   resource_base,
   whitelist,
   species_specific,
-  internal = TRUE,
   overwrite = TRUE
 )
