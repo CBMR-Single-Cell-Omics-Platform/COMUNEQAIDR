@@ -18,6 +18,7 @@ Imports:
     rhandsontable,
     shiny,
     shinyjs,
+    shinyWidgets,
     stats,
     utils,
     writexl,
