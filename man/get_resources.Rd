@@ -8,8 +8,6 @@ get_resources(location, species)
 }
 \arguments{
 \item{location}{string, name of computing location.}
-
-\item{species}{string, name of species investigated.}
 }
 \value{
 list of resource locations

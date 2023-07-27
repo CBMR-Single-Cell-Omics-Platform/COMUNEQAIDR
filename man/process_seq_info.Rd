@@ -4,12 +4,14 @@
 \alias{process_seq_info}
 \title{Process sequencing info sheet}
 \usage{
-process_seq_info(seq_info, sample_col, output_col)
+process_seq_info(seq_info, sample_col, date_col, output_col)
 }
 \arguments{
 \item{seq_info}{data.frame, sequencing info}
 
 \item{sample_col}{string, name of column with comma separated sample names}
+
+\item{date_col}{string, name of column with sequencing date}
 
 \item{output_col}{string, name of column with bcl folder}
 }

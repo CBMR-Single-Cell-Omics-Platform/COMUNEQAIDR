@@ -10,7 +10,7 @@ parse_library_sheet_v1(file)
 \item{file}{string, path to excel file with sequencing information}
 }
 \value{
-data.frame with info necessary for running COMUNEQAID
+list of data.frames with info tables
 }
 \description{
 Parse a library sheet v1 file
