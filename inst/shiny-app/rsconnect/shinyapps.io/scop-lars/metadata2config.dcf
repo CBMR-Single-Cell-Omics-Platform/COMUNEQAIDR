@@ -5,9 +5,9 @@ account: scop-lars
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9516509
-bundleId: 7502287
+bundleId: 7616810
 url: https://scop-lars.shinyapps.io/metadata2config/
-when: 1690457838.68658
-lastSyncTime: 1690457838.68661
+when: 1693229895.96586
+lastSyncTime: 1693229895.96587
 asMultiple: FALSE
 asStatic: FALSE
